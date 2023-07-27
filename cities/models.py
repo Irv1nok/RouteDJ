@@ -10,7 +10,7 @@ class City(models.Model):
 
     class Meta:
         verbose_name = 'Город'
-        verbose_name_plural = 'Города'
+        verbose_name_plural = 'Городов'
         ordering = ['name']
 
     def get_absolute_url(self):
