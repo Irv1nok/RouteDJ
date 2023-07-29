@@ -31,7 +31,7 @@ def get_graph(qs) -> dict:
 def get_routes(request, form) -> dict:
     """функция поиска маршрутов"""
     context = {'form': form}
-    qs = Train.objects.all()
+    qs = Train.objects.all().select_related('from_city', 'to_city')
     graph = get_graph(qs)
     data = form.cleaned_data
     from_city = data['from_city']
