@@ -37,6 +37,7 @@
       <li class="nav-item {% if request.path == route_list %} active {% endif %}">
         <a class="nav-link" href="{% url 'list' %}">Маршруты</a>
       </li>
+      {% if user.is_authenticated %}
       <li class="nav-item dropdown
         {% if request.path == cities_create_url or request.path == trains_create_url %} active {% endif %}">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -48,16 +49,21 @@
           <div class="dropdown-divider"></div>
         </div>
       </li>
+      {% endif %}
       </li>
       {% if not user.is_authenticated %}
-          <li class="nav-item ">
+          <li class="nav-item " >
             <a class="nav-link" href="{% url 'accounts:login' %}">Войти</a>
+          </li>
+          <li class="nav-item " >
+            <a class="nav-link" href="{% url 'accounts:register' %}">Регистрация</a>
           </li>
       {% else %}
           <li class="nav-item ">
             <a class="nav-link" href="{% url 'accounts:logout' %}">Выйти</a>
+          </li>
       {% endif %}
-      </li>
+
     </ul>
     <form class="form-inline my-2 my-lg-0">
       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
