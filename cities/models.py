@@ -13,5 +13,5 @@ class City(models.Model):
         verbose_name_plural = 'Городов'
         ordering = ['name']
 
-    def get_absolute_url(self):
+    def get_absolute_url(self): # generate link for unique obj.
         return reverse('cities:detail', kwargs={'pk': self.pk})
