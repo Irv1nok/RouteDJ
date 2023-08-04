@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 
 from cities.models import City
@@ -22,3 +23,27 @@ class AllTestsCase(TestCase):
                Train(name='t9', from_city=self.city_D, to_city=self.city_E, travel_time=4)
                ]
         Train.objects.bulk_create(lst)
+
+    def test_model_city_duplicate(self):
+        """Тестирование возникновения ощибки при создании дубля города"""
+        city = City(name='A')
+        with self.assertRaises(ValidationError):
+            city.full_clean()
+
+
+    def test_model_train_duplicate(self):
+        """Тестирование возникновения ощибки при создании дубля поезда"""
+        train = Train(name='t1', from_city=self.city_A, to_city=self.city_B, travel_time=129)
+        with self.assertRaises(ValidationError):
+            train.full_clean()
+
+
+    def test_model_train_train_duplicate(self):
+        """Тестирование возникновения ощибки при создании дубля поезда"""
+        train = Train(name='t11234', from_city=self.city_A, to_city=self.city_B, travel_time=9)
+        with self.assertRaises(ValidationError):
+            train.full_clean()
+        try:
+            train.full_clean()
+        except ValidationError as e:
+            self.assertEqual({'__all__': ['Необходимо изменить время в пути']}, e.message_dict)
