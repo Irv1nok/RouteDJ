@@ -1,8 +1,11 @@
 from django.core.exceptions import ValidationError
 from django.test import TestCase
+from django.urls import reverse
 
 from cities.models import City
 from trains.models import Train
+from routes import views as routes_view
+from cities import views as cities_view
 
 
 class AllTestsCase(TestCase):
@@ -47,3 +50,20 @@ class AllTestsCase(TestCase):
             train.full_clean()
         except ValidationError as e:
             self.assertEqual({'__all__': ['Необходимо изменить время в пути']}, e.message_dict)
+            self.assertIn('Необходимо изменить время в пути', e.messages)
+
+
+    def test_home_routes_views(self):
+        """проверка адреса по которому происходит обращение функции home"""
+        response = self.client.get(reverse('home'))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed(response, template_name='routes/home.html')
+        self.assertEqual(response.resolver_match.func, routes_view.home)
+
+
+    def test_cbv_detail_views(self):
+        """проверка адреса по которому происходит обращение функции home"""
+        response = self.client.get(reverse('cities:detail', kwargs={'pk': self.city_A.id}))
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed(response, template_name='cities/detail.html')
+        self.assertEqual(response.resolver_match.func.__name__, cities_view.CityDetailView.as_view().__name__)
